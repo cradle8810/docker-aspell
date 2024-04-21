@@ -1,8 +1,8 @@
 FROM buildpack-deps:stable-curl
 
 ENV ASPELL_SERVER ftp://ftp.gnu.org/gnu/aspell
-ENV ASPELL_VERSION 0.60.6.1
-ENV ASPELL_EN 2015.04.24-0
+ENV ASPELL_VERSION 0.60.8.1
+ENV ASPELL_EN 2020.12.07-0
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential \
 
