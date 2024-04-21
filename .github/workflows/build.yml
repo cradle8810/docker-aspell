@@ -4,8 +4,7 @@ name: Aspell Docker Image
 on:
   push:
   pull_request:
-    branches:
-    - 'master'
+    types: [opened, reopened]
   workflow_dispatch:
 
 env:
