@@ -1,0 +1,60 @@
+---
+name: Aspell Docker Image build
+
+on:
+  push:
+  pull_request:
+    types: [opened, reopened]
+  workflow_dispatch:
+
+env:
+  CI_IMAGE_NAME: 'ghcr.io/cradle8810/aspell'      
+
+jobs:
+    docker-image-build:
+        runs-on: ubuntu-latest
+        steps:
+
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Kick Buildx
+          uses: docker/setup-buildx-action@v3
+        
+        - name: Docker meta
+          id: docker_meta
+          uses: docker/metadata-action@v5
+          with:
+            images: ${{ env.CI_IMAGE_NAME }}
+            labels: |
+              org.opencontainers.image.source = "https://github.com/cradle8810/docker-aspell"
+  
+        - name: Login to DockerHub
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: true
+            password: ${{ secrets.CR_PAT }}
+
+        - name: docker build and push
+          uses: docker/build-push-action@v2
+          with:
+            context: .
+            push: ${{ github.event_name != 'pull_request' }}
+            tags: ${{ steps.docker_meta.outputs.tags }}
+            labels: ${{ steps.docker_meta.outputs.labels }}
+
+    test:
+      container:
+        image: ghcr.io/cradle8810/aspell
+      needs: docker-image-build
+      runs-on: ubuntu-latest
+      steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Exec test
+        run: |
+          cd 'test' && \
+          sh -e ./execTest.sh
