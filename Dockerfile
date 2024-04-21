@@ -1,4 +1,4 @@
-FROM buildpack-deps:jessie-curl
+FROM buildpack-deps:stable-curl
 
 ENV ASPELL_SERVER ftp://ftp.gnu.org/gnu/aspell
 ENV ASPELL_VERSION 0.60.6.1
